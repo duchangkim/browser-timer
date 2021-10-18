@@ -1,4 +1,4 @@
-type EventName = 'seconds-updated' | 'timer-finish';
+export type EventName = 'seconds-updated' | 'timer-finish';
 
 interface Events {
   [eventName: string]: Array<Function>;
@@ -21,7 +21,25 @@ export default class EventBus {
 
   emit(eventName: EventName) {
     if (this.events[eventName]) {
-      this.events[eventName].forEach((listener: Function) => listener.apply(this));
+      this.events[eventName].forEach((listener: Function) =>
+        listener.apply(this),
+      );
+    }
+  }
+
+  removeListener(eventName: EventName, listener: Function) {
+    const targetIndex = this.events[eventName].indexOf(listener);
+
+    if (targetIndex !== -1) {
+      this.events[eventName].splice(targetIndex, 1);
+    }
+  }
+
+  removeListenerAll(eventName?: EventName) {
+    if (!eventName) {
+      this.events = {};
+    } else if (Array.isArray(this.events[eventName])) {
+      this.events[eventName] = [];
     }
   }
 }
