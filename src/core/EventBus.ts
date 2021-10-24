@@ -1,4 +1,13 @@
-export type EventName = 'seconds-updated' | 'timer-finish';
+export type EventName =
+  | 'secondsUpdated'
+  | 'millisecondsUpdated'
+  | 'Updated'
+  | 'Updated'
+  | 'finish'
+  | 'start'
+  | 'pause'
+  | 'stop'
+  | 'reset';
 
 interface Events {
   [eventName: string]: Array<Function>;
@@ -21,9 +30,7 @@ export default class EventBus {
 
   emit(eventName: EventName) {
     if (this.events[eventName]) {
-      this.events[eventName].forEach((listener: Function) =>
-        listener.apply(this),
-      );
+      this.events[eventName].forEach((listener: Function) => listener.apply(this));
     }
   }
 
