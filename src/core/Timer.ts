@@ -24,6 +24,8 @@ export default class Timer {
   }
 
   start() {
+    if (this.intervalRef > 0) return;
+
     this.endTime = Date.now() + this.seconds * 1000;
     this.intervalRef = window.setInterval(
       () => (this.type === 'countdown' ? this.countdown() : this.timer()),
@@ -54,6 +56,7 @@ export default class Timer {
 
     if (this.msCount < 0) {
       window.clearInterval(this.intervalRef);
+      this.intervalRef = 0;
       this.eventBus.emit('timer-finish');
     }
   }
