@@ -21,11 +21,15 @@
       </section>
       <section style="margin-top: 50px;">
         <h2>Countdown space</h2>
-        <input id="countdownInput" type="number">
+        <input id="countdownInput" type="number" value="2">
         <button id="countdownButton">Start</button>
+        <button id="countdownPause">Pause</button>
+        <button id="countdownStop">Stop</button>
+        <button id="countdownReset">Reset</button>
         <br />
         <br />
-        <div id="countdownSpace">00:00</div>
+        <div id="countdownSpace">00:<span id="sec">00</span>:<span id="ms">0000</span></div>
+        <div id="done"></div>
       </section>
     </article>
   </main>
