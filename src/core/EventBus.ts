@@ -1,8 +1,8 @@
 export type EventName =
   | 'secondsUpdated'
+  | 'tenthsSecondsUpdated'
+  | 'hundredthsSecondsUpdated'
   | 'millisecondsUpdated'
-  | 'Updated'
-  | 'Updated'
   | 'finish'
   | 'start'
   | 'pause'

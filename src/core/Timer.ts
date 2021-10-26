@@ -11,12 +11,14 @@ export default class Timer {
   private eventBus: EventBus;
   private intervalRef = 0;
   private isPause = false;
-  type: TimerType;
-  seconds: number;
-  msCount = 0;
-  endTime = 0;
-  timerSeconds = 0;
-  timerMilliseconds = 0;
+  private type: TimerType;
+  private seconds: number;
+  private msCount = 0;
+  private endTime = 0;
+  private timerSeconds = 0;
+  private timerTenthsSeconds = 0;
+  private timerHundredthsSeconds = 0;
+  private timerMilliseconds = 0;
 
   constructor(options: TimerOptions) {
     this.eventBus = new EventBus();
@@ -101,8 +103,19 @@ export default class Timer {
       this.eventBus.emit('millisecondsUpdated');
     }
 
-    const s = this.msCount <= 0 ? 0 : Math.floor(this.msCount / 1000);
+    const cs = Math.floor(ms / 100);
+    if (this.timerTenthsSeconds !== cs) {
+      this.timerTenthsSeconds = cs;
+      this.eventBus.emit('tenthsSecondsUpdated');
+    }
+    
+    const ds = Math.floor(ms / 10);
+    if (this.timerHundredthsSeconds !== ds) {
+      this.timerHundredthsSeconds = ds;
+      this.eventBus.emit('hundredthsSecondsUpdated');
+    }
 
+    const s = this.msCount <= 0 ? 0 : Math.floor(this.msCount / 1000);
     if (this.timerSeconds !== s) {
       this.timerSeconds = s;
       this.eventBus.emit('secondsUpdated');
@@ -111,19 +124,39 @@ export default class Timer {
 
   timer() {}
 
-  // getters
-  getSeconds() {
+  /**
+   * Returns seconds
+   * 
+   * @returns `seconds`
+   */
+  getSeconds(): number {
     return this.timerSeconds;
   }
 
-  // 1/1000th of a second -> 1000ms === 1s
-  getMilliseconds(digit?: number): number {
-    if (digit === 1) {
-      return Math.floor(this.timerMilliseconds / 100);
-    } else if (digit === 2) {
-      return Math.floor(this.timerMilliseconds / 10);
-    }
+  /**
+   * Returns 1/10th of a second
+   * 
+   * @returns `deciseconds`
+   */
+  getTenthsSeconds(): number {
+    return this.timerTenthsSeconds;
+  }
 
+  /**
+   * Returns 1/100th of a second
+   * 
+   * @returns `centiseconds`
+   */
+  getHundredthsSeconds(): number {
+    return this.timerHundredthsSeconds;
+  }
+
+  /**
+   * Returns 1/1000th of a second (1000ms === 1s)
+   * 
+   * @returns `milliseconds`
+   */
+  getMilliseconds(): number {
     return this.timerMilliseconds;
   }
 
