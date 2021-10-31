@@ -1,5 +1,5 @@
 {
-  "name": "@duchi/timer",
+  "name": "browser-timer",
   "version": "1.0.0",
   "description": "This is timer library.",
   "main": "build/index.js",
@@ -10,8 +10,10 @@
     "start:http": "http-server ./public"
   },
   "keywords": [
+    "time",
     "timer",
-    "countdown"
+    "countdown",
+    "stopwatch"
   ],
   "files": [
     "build",

@@ -4,7 +4,7 @@ export type TimerType = 'timer' | 'countdown';
 
 export interface TimerOptions {
   type: TimerType;
-  seconds: number;
+  seconds?: number;
 }
 
 export default class Timer {
@@ -16,21 +16,19 @@ export default class Timer {
   private msCount = 0;
   private endTime = 0;
   private timerSeconds = 0;
-  private timerTenthsSeconds = 0;
-  private timerHundredthsSeconds = 0;
-  private timerMilliseconds = 0;
+  private timerTenthsSeconds = 0; // 1자리
+  private timerHundredthsSeconds = 0; // 2자리
+  private timerMilliseconds = 0; // 3자리
 
   constructor(options: TimerOptions) {
     this.eventBus = new EventBus();
 
     this.type = options.type;
-    this.seconds = options.seconds;
+    this.seconds = options.seconds || 0;
   }
 
   start() {
     if (this.intervalRef > 0) return;
-
-    console.log('start!');
 
     if (!this.isPause) {
       this.msCount = this.seconds * 1000;
@@ -47,8 +45,6 @@ export default class Timer {
   pause() {
     if (this.intervalRef === 0) return;
 
-    console.log('pause!');
-
     clearInterval(this.intervalRef);
     this.intervalRef = 0;
     this.isPause = true;
@@ -58,15 +54,12 @@ export default class Timer {
   stop() {
     if (this.intervalRef === 0) return;
 
-    console.log('stop!');
-
     clearInterval(this.intervalRef);
     this.intervalRef = 0;
     this.eventBus.emit('stop');
   }
 
   reset(second?: number) {
-    console.log('reset!');
 
     if (second) {
       this.seconds = second;
@@ -90,29 +83,37 @@ export default class Timer {
       this.timerSeconds = 0;
       this.eventBus.emit('secondsUpdated');
       this.timerMilliseconds = 0;
-      console.log(this.msCount, 'when finish');
 
       window.clearInterval(this.intervalRef);
       this.intervalRef = 0;
       this.eventBus.emit('finish');
+      this.eventBus.emit('secondsUpdated');
+      this.eventBus.emit('tenthsSecondsUpdated');
+      this.eventBus.emit('hundredthsSecondsUpdated');
+      this.eventBus.emit('millisecondsUpdated');
     }
 
-    const ms = this.msCount <= 0 ? 0 : this.msCount % 1000;
+    /**
+     * 1000ms === 1sec
+     * 100cs === 1sec  1cs === 10ms
+     * 10ds === 1sec   1ds === 100ms
+     */
+    const ms = this.msCount <= 0 ? 0 : this.msCount % 1000; // 3자리 100분의 1초
     if (this.timerMilliseconds !== ms) {
       this.timerMilliseconds = ms;
       this.eventBus.emit('millisecondsUpdated');
     }
 
-    const cs = Math.floor(ms / 100);
-    if (this.timerTenthsSeconds !== cs) {
-      this.timerTenthsSeconds = cs;
-      this.eventBus.emit('tenthsSecondsUpdated');
+    const cs = Math.floor(ms / 10); // 100cs === 1s
+    if (this.timerHundredthsSeconds !== cs) {
+      this.timerHundredthsSeconds = cs;
+      this.eventBus.emit('hundredthsSecondsUpdated'); // 1초의 1/10 === 1000ms * 0.1
     }
-    
-    const ds = Math.floor(ms / 10);
-    if (this.timerHundredthsSeconds !== ds) {
-      this.timerHundredthsSeconds = ds;
-      this.eventBus.emit('hundredthsSecondsUpdated');
+
+    const ds = Math.floor(ms / 100); // 10ds === 1s
+    if (this.timerTenthsSeconds !== ds) {
+      this.timerTenthsSeconds = ds;
+      this.eventBus.emit('tenthsSecondsUpdated');
     }
 
     const s = this.msCount <= 0 ? 0 : Math.floor(this.msCount / 1000);
@@ -122,7 +123,9 @@ export default class Timer {
     }
   }
 
-  timer() {}
+  timer() {
+    // @todo 타이머 로직 작성
+  }
 
   /**
    * Returns seconds
