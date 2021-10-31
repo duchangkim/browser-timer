@@ -1,13 +1,12 @@
 {
   "name": "browser-timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is timer library.",
   "main": "build/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve",
     "build": "npm run build:ts && cross-env NODE_ENV=production webpack",
-    "build:ts": "tsc",
-    "start:http": "http-server ./public"
+    "build:ts": "tsc"
   },
   "keywords": [
     "time",
@@ -20,15 +19,15 @@
     "dist",
     "src"
   ],
-  "homepage": "https://github.com/duchangkim/easy-timer",
+  "homepage": "https://github.com/duchangkim/browser-timer",
   "bugs": {
-    "url": "https://github.com/duchangkim/easy-timer/issues",
+    "url": "https://github.com/duchangkim/browser-timer/issues",
     "email": "duchang.dev@gmail.com"
   },
   "author": "Duchi <duchang.dev@gmail.com> (https://www.notion.so/3ea8c8c5e81d4061949f79fca46d2320)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/duchangkim/easy-timer"
+    "url": "https://github.com/duchangkim/browser-timer"
   },
   "license": "MIT",
   "devDependencies": {
@@ -42,7 +41,6 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-prettier": "^4.0.0",
     "html-webpack-plugin": "^4.5.0",
-    "http-server": "^0.12.3",
     "prettier": "^2.4.1",
     "ts-loader": "^8.0.13",
     "typescript": "^4.1.3",
