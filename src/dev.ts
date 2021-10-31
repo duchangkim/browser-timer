@@ -1,55 +1,137 @@
 import Timer from './core/Timer';
 
-const devSpan = document.getElementById('dev') as HTMLElement;
+// simple usage
+const simpleUsage = () => {
+  const input = document.getElementById('simpleInput') as HTMLInputElement;
+  const start = document.getElementById('simpleStart') as HTMLElement;
+  const timeSpace = document.getElementById('simpleTime') as HTMLElement;
+  const seconds = timeSpace.querySelector('.s') as HTMLElement;
+  const done = document.getElementById('simpleDone') as HTMLElement;
 
-devSpan.innerHTML = '!!DEV!!';
+  const timer = new Timer({ type: 'countdown' });
 
-// countdown area
-const countdownTimer = new Timer({
-  type: 'countdown',
-  seconds: 5,
-});
+  input.addEventListener('input', () => {
+    timer.setSeconds(parseInt(input.value, 10));
+    seconds.innerText = input.value;
+  });
+  start.addEventListener('click', () => {
+    input.disabled = true;
+    done.innerText = '';
+    timer.setSeconds(parseInt(input.value, 10));
+    timer.start();
+  });
 
-const countdownStartButton = document.getElementById('countdownButton') as HTMLElement;
-const countdownPauseButton = document.getElementById('countdownPause') as HTMLElement;
-const countdownStopButton = document.getElementById('countdownStop') as HTMLElement;
-const countdownResetButton = document.getElementById('countdownReset') as HTMLElement;
-const sec = document.getElementById('sec') as HTMLSpanElement;
-const ms = document.getElementById('ms') as HTMLSpanElement;
-
-countdownStartButton.addEventListener('click', () => {
-  const second =
-    parseInt((document.getElementById('countdownInput') as HTMLInputElement).value) ||
-    countdownTimer.getSeconds();
-  countdownTimer.setSeconds(second);
-  countdownTimer.start();
-});
-countdownPauseButton.addEventListener('click', () => {
-  countdownTimer.pause();
-});
-countdownStopButton.addEventListener('click', () => {
-  countdownTimer.stop();
-});
-countdownResetButton.addEventListener('click', () => {
-  const second =
-    parseInt((document.getElementById('countdownInput') as HTMLInputElement).value) ||
-    countdownTimer.getSeconds();
-  countdownTimer.reset(second);
-});
-
-const updateDOM = () => {
-  console.log('얼마나 이벤트 발생하는지?');
-  sec.innerText = countdownTimer.getSeconds().toString();
+  timer.addEventListener('secondsUpdated', () => {
+    seconds.innerText = timer.getSeconds().toString();
+  });
+  timer.addEventListener('finish', () => {
+    input.disabled = false;
+    done.innerText = 'Countdown done!!!';
+  });
 };
 
-countdownTimer.addEventListener('finish', () => {
-  (document.getElementById('done') as HTMLDivElement).innerText = countdownTimer
-    .getSeconds()
-    .toString();
-});
-countdownTimer.addEventListener('secondsUpdated', updateDOM);
-countdownTimer.addEventListener('millisecondsUpdated', () => {
-  // console.log(countdownTimer.getMilliseconds(2).toString());
+const hundredthsSeconds = () => {
+  const input = document.getElementById('hundredthsInput') as HTMLInputElement;
+  const start = document.getElementById('hundredthsStart') as HTMLElement;
+  const timeSpace = document.getElementById('hundredthsTime') as HTMLElement;
+  const seconds = timeSpace.querySelector('.s') as HTMLElement;
+  const deciseconds = timeSpace.querySelector('.cs') as HTMLElement;
+  const done = document.getElementById('hundredthsDone') as HTMLElement;
 
-  ms.innerText = countdownTimer.getMilliseconds(2).toString();
-});
+  const timer = new Timer({ type: 'countdown' });
+
+  input.addEventListener('input', () => {
+    seconds.innerText = input.value;
+    timer.setSeconds(parseInt(input.value, 10));
+  });
+  start.addEventListener('click', () => {
+    input.disabled = true;
+    done.innerText = '';
+    timer.setSeconds(parseInt(input.value, 10));
+    timer.start();
+  });
+
+  timer.addEventListener('secondsUpdated', () => {
+    seconds.innerText = timer.getSeconds().toString();
+  });
+  timer.addEventListener('hundredthsSecondsUpdated', () => {
+    deciseconds.innerText = timer.getHundredthsSeconds().toString();
+  });
+  timer.addEventListener('finish', () => {
+    input.disabled = false;
+    done.innerText = 'Countdown done!!!';
+  });
+};
+
+const tenthsSeconds = () => {
+  const input = document.getElementById('tenthsInput') as HTMLInputElement;
+  const start = document.getElementById('tenthsStart') as HTMLElement;
+  const timeSpace = document.getElementById('tenthsTime') as HTMLElement;
+  const seconds = timeSpace.querySelector('.s') as HTMLElement;
+  const centiseconds = timeSpace.querySelector('.cs') as HTMLElement;
+  const done = document.getElementById('tenthsDone') as HTMLElement;
+
+  const timer = new Timer({ type: 'countdown' });
+
+  input.addEventListener('input', () => {
+    seconds.innerText = input.value;
+    timer.setSeconds(parseInt(input.value, 10));
+  });
+  start.addEventListener('click', () => {
+    input.disabled = true;
+    done.innerText = '';
+    timer.setSeconds(parseInt(input.value, 10));
+    timer.start();
+  });
+
+  timer.addEventListener('secondsUpdated', () => {
+    seconds.innerText = timer.getSeconds().toString();
+  });
+  timer.addEventListener('tenthsSecondsUpdated', () => {
+    centiseconds.innerText = timer.getTenthsSeconds().toString();
+  });
+  timer.addEventListener('finish', () => {
+    input.disabled = false;
+    done.innerText = 'Countdown done!!!';
+  });
+};
+
+const milliSeconds = () => {
+  const input = document.getElementById('milliInput') as HTMLInputElement;
+  const start = document.getElementById('milliStart') as HTMLElement;
+  const timeSpace = document.getElementById('milliTime') as HTMLElement;
+  const seconds = timeSpace.querySelector('.s') as HTMLElement;
+  const centiseconds = timeSpace.querySelector('.ms') as HTMLElement;
+  const done = document.getElementById('milliDone') as HTMLElement;
+
+  const timer = new Timer({ type: 'countdown' });
+
+  input.addEventListener('input', () => {
+    seconds.innerText = input.value;
+    timer.setSeconds(parseInt(input.value, 10));
+  });
+  start.addEventListener('click', () => {
+    input.disabled = true;
+    done.innerText = '';
+    timer.setSeconds(parseInt(input.value, 10));
+    timer.start();
+  });
+
+  timer.addEventListener('secondsUpdated', () => {
+    seconds.innerText = timer.getSeconds().toString();
+  });
+  timer.addEventListener('millisecondsUpdated', () => {
+    centiseconds.innerText = timer.getMilliseconds().toString();
+  });
+  timer.addEventListener('finish', () => {
+    input.disabled = false;
+    done.innerText = 'Countdown done!!!';
+  });
+};
+
+window.onload = () => {
+  simpleUsage();
+  tenthsSeconds();
+  hundredthsSeconds();
+  milliSeconds();
+};

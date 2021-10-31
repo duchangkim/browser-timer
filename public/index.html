@@ -5,12 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timer Example</title>
+  <style>
+    .done {
+      font-weight: bold;
+      color: rgb(196, 68, 68);
+    }
+  </style>
 </head>
 
 <body>
   <main id="root">
     <article>
-      <h1>Timer <span id="dev"></span></h1>
+      <h1>browser-timer</h1>
       <section>
         <h2>Timer space</h2>
         <input id="timerInput" type="number">
@@ -19,17 +25,51 @@
         <br />
         <div id="timerSpace">00:00</div>
       </section>
+      <hr />
       <section style="margin-top: 50px;">
         <h2>Countdown space</h2>
-        <input id="countdownInput" type="number" value="2">
-        <button id="countdownButton">Start</button>
-        <button id="countdownPause">Pause</button>
-        <button id="countdownStop">Stop</button>
-        <button id="countdownReset">Reset</button>
+        <article>
+          <h3>Simple Usage</h3>
+          <input type="number" id="simpleInput" value="5" />
+          <button id="simpleStart">Start</button>
+          <br />
+          <br />
+          <p id="simpleTime">00:<span class="s">5</span></p>
+          <div id="simpleDone" class="done"></div>
+        </article>
+        <hr />
         <br />
+        <article>
+          <h3>Show tenths seconds</h3>
+          <input type="number" id="tenthsInput" value="5" />
+          <button id="tenthsStart">Start</button>
+          <br />
+          <br />
+          <p id="tenthsTime">00:<span class="s">5</span>:<span class="cs">0</span></p>
+          <div id="tenthsDone" class="done"></div>
+        </article>
+        <hr />
         <br />
-        <div id="countdownSpace">00:<span id="sec">00</span>:<span id="ms">0000</span></div>
-        <div id="done"></div>
+        <article>
+          <h3>Show hundredths seconds</h3>
+          <input type="number" id="hundredthsInput" value="5" />
+          <button id="hundredthsStart">Start</button>
+          <br />
+          <br />
+          <p id="hundredthsTime">00:<span class="s">5</span>:<span class="cs">0</span></p>
+          <div id="hundredthsDone" class="done"></div>
+        </article>
+        <hr />
+        <br />
+        <article>
+          <h3>Show milliseconds</h3>
+          <input type="number" id="milliInput" value="5" />
+          <button id="milliStart">Start</button>
+          <br />
+          <br />
+          <p id="milliTime">00:<span class="s">00</span>:<span class="ms">000</span></p>
+          <div id="milliDone" class="done"></div>
+        </article>
       </section>
     </article>
   </main>
