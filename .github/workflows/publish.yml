@@ -27,3 +27,4 @@ jobs:
               echo testenv ${{ env.TEST_ENV }}
         env: 
           TEST_ENV: C8
+          TEST_ENV_T: ${{ env.TRIGGERED_BRANCH }}////has?
