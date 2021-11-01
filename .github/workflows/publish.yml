@@ -23,4 +23,8 @@ jobs:
             host: ${{ secrets.TEST_HOST }}
             username: ${{ secrets.TEST_USERNAME }}
             key: ${{ secrets.TEST_SSH_KEY }}
-            script: ${{ env.BUILD_SCRIPT }}
+            script: | 
+              ${{ env.BUILD_SCRIPT }}
+              pwd
+              ll
+              echo man~ github actions man~
