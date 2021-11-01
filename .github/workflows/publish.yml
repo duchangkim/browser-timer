@@ -3,11 +3,11 @@ on:
   push:
     branches: [ actionsTest ]
 jobs:
-  publish: 
+  deploy-test: 
     runs-on: ubuntu-latest
     steps:
-      # Checkout
-      - uses: appleboy/ssh-action@master
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
         with:
             host: ${{ secrets.TEST_HOST }}
             username: ${{ secrets.TEST_USERNAME }}
