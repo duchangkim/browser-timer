@@ -3,12 +3,14 @@ on:
   push:
     branches: [ actionsTest ]
 env:
+  TRIGGERED_BRANCH: ${{ github.ref }}
   BUILD_SCRIPT: |
               whoami
               cd /var/www/browser-timer
               pwd
               git branch
               echo ${{ github.ref }}
+              echo ${{ env.TRIGGERED_BRANCH == 'refs/heads/actionsTest' }}
 
 jobs:
   deploy: 
@@ -16,6 +18,7 @@ jobs:
     steps:
       - name: dev deploy
         uses: appleboy/ssh-action@master
+        if: ${{ env.TRIGGERED_BRANCH == 'refs/heads/actionsTest' }}
         with:
             host: ${{ secrets.TEST_HOST }}
             username: ${{ secrets.TEST_USERNAME }}
