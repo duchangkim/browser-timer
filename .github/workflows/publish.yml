@@ -2,19 +2,21 @@ name: TEST
 on:
   push:
     branches: [ actionsTest ]
+env:
+  BUILD_SCRIPT: |
+              whoami
+              cd /var/www/browser-timer
+              pwd
+              git branch
+
 jobs:
-  deploy-test: 
+  deploy: 
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using password
+      - name: dev deploy
         uses: appleboy/ssh-action@master
         with:
             host: ${{ secrets.TEST_HOST }}
             username: ${{ secrets.TEST_USERNAME }}
             key: ${{ secrets.TEST_SSH_KEY }}
-            script: |
-              whoami
-              cd /var/www/browser-timer
-              git checkout actionsTest
-              git pull
-              npm run build
+            script: ${{ env.BUILD_SCRIPT }}
