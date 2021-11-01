@@ -10,7 +10,7 @@ env:
               pwd
               git branch
               echo ${{ github.ref }}
-              echo ${{ env.TRIGGERED_BRANCH == 'refs/heads/actionsTest' }}
+              echo ${{ github.ref == 'refs/heads/actionsTest' }}
 
 jobs:
   deploy: 
