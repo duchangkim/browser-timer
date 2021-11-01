@@ -4,20 +4,12 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-
-
+  PRE_BUILD_SCRIPT: |
+        whoami
+        cd /var/www/browser-timer
+        echo nvm use 8
 jobs:
   deploy:
-    env:
-      BUILD_SCRIPT: |
-            whoami
-            cd /var/www/browser-timer
-            pwd
-            git branch
-            echo ${{ github.ref }}
-            echo ${{ env.TRIGGERED_BRANCH }}
-            sudo git checkout ${{ env.TRIGGERED_BRANCH }}
-
     runs-on: ubuntu-latest
     steps:
       - name: dev deploy
@@ -28,7 +20,10 @@ jobs:
             username: ${{ secrets.TEST_USERNAME }}
             key: ${{ secrets.TEST_SSH_KEY }}
             script: | 
-              ${{ env.BUILD_SCRIPT }}
-              pwd
-              ll
-              echo ${{ env.TRIGGERED_BRANCH }}
+              ${{ env.PRE_BUILD_SCRIPT }}
+              sudo git checkout ${{ env.TRIGGERED_BRANCH }}
+              sudo git pull
+              sudo npm run build
+              echo testenv ${{ env.TEST_ENV }}
+        env: 
+          TEST_ENV: C8
