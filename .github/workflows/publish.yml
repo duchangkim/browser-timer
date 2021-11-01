@@ -4,10 +4,6 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-  PRE_BUILD_SCRIPT: |
-        whoami
-        cd /var/www/browser-timer
-        echo nvm use 8
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,11 +17,22 @@ jobs:
             key: ${{ secrets.TEST_SSH_KEY }}
             script: | 
               ${{ env.PRE_BUILD_SCRIPT }}
-              sudo git checkout ${{ env.TRIGGERED_BRANCH }}
-              sudo git pull
-              sudo npm run build
-              echo testenv ${{ env.TEST_ENV }}
-              echo testenv22 ${{ env.TEST_ENV_T }}
-        env: 
-          TEST_ENV: C8
-          TEST_ENV_T: ${{ env.TRIGGERED_BRANCH }}////has?
+              ${{ env.BUILD_SCRIPT }}
+      - name: main deploy
+        uses: appleboy/ssh-action@master
+        if: ${{ env.TRIGGERED_BRANCH == 'main' }}
+        with:
+            host: ${{ secrets.TEST_HOST }}
+            username: ${{ secrets.TEST_USERNAME }}
+            key: ${{ secrets.TEST_SSH_KEY }}
+            script: | 
+              ${{ env.PRE_BUILD_SCRIPT }}
+              ${{ env.BUILD_SCRIPT }}
+        env:
+          PRE_BUILD_SCRIPT: |
+            cd /var/www
+            nvm use node 8
+            git checkout ${{ env.TRIGGERED_BRANCH }}
+            git pull origin ${{ env.TRIGGERED_BRANCH }}
+          BUILD_SCRIPT: |
+            npm run ${{ env.TRIGGERED_BRANCH == 'master' && 'build' || 'dev-build' }}
