@@ -10,8 +10,8 @@ env:
               pwd
               git branch
               echo ${{ github.ref }}
-              echo ${{ TRIGGERED_BRANCH }}
-              sudo git checkout ${{ TRIGGERED_BRANCH }}
+              echo ${{ env.TRIGGERED_BRANCH }}
+              sudo git checkout ${{ env.TRIGGERED_BRANCH }}
 
 jobs:
   deploy: 
