@@ -8,6 +8,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      env:
+          PRE_BUILD_SCRIPT: |
+            cd /var/www/browser-timer
+            nvm use node 14
+            git checkout ${{ env.TRIGGERED_BRANCH }}
+            git pull origin ${{ env.TRIGGERED_BRANCH }}
+          BUILD_SCRIPT: |
+            npm run ${{ env.TRIGGERED_BRANCH == 'master' && 'build' || 'dev-build' }}
       - name: dev deploy
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
@@ -29,11 +37,3 @@ jobs:
               ${{ env.PRE_BUILD_SCRIPT }}
               ${{ env.BUILD_SCRIPT }}
               echo ${{ env.PRE_BUILD_SCRIPT }}
-        env:
-          PRE_BUILD_SCRIPT: |
-            cd /var/www/browser-timer
-            nvm use node 14
-            git checkout ${{ env.TRIGGERED_BRANCH }}
-            git pull origin ${{ env.TRIGGERED_BRANCH }}
-          BUILD_SCRIPT: |
-            npm run ${{ env.TRIGGERED_BRANCH == 'master' && 'build' || 'dev-build' }}
