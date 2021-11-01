@@ -10,7 +10,8 @@ env:
               pwd
               git branch
               echo ${{ github.ref }}
-              echo ${{ github.ref == 'refs/heads/actionsTest' }}
+              echo ${{ TRIGGERED_BRANCH }}
+              sudo git checkout ${{ TRIGGERED_BRANCH }}
 
 jobs:
   deploy: 
