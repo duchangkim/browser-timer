@@ -1,26 +1,17 @@
-name: Npm_publish
+name: TEST
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ actionsTest ]
 jobs:
   publish: 
     runs-on: ubuntu-latest
     steps:
       # Checkout
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: appleboy/ssh-action@master
         with:
-          node-version: '14'
-      
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Publish
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+            host: ${{ secrets.TEST_HOST }}
+            username: ${{ secrets.TEST_USERNAME }}
+            key: ${{ secrets.TEST_SSH_KEY }}
+            script: |
+              whoami
+              ls -al
