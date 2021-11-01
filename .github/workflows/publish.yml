@@ -8,6 +8,7 @@ env:
               cd /var/www/browser-timer
               pwd
               git branch
+              echo ${{ GITHUB_REF##*/ }}
 
 jobs:
   deploy: 
