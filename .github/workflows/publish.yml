@@ -14,4 +14,7 @@ jobs:
             key: ${{ secrets.TEST_SSH_KEY }}
             script: |
               whoami
-              ls -al
+              cd /var/www/browser-timer
+              git checkout actionsTest
+              git pull
+              npm run build
