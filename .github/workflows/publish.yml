@@ -25,6 +25,7 @@ jobs:
               sudo git pull
               sudo npm run build
               echo testenv ${{ env.TEST_ENV }}
+              echo testenv22 ${{ env.TEST_ENV_T }}
         env: 
           TEST_ENV: C8
           TEST_ENV_T: ${{ env.TRIGGERED_BRANCH }}////has?
