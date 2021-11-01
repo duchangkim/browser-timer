@@ -7,7 +7,7 @@ export interface TimerOptions {
   seconds?: number;
 }
 
-export default class Timer {
+export class Timer {
   private eventBus: EventBus;
   private intervalRef = 0;
   private isPause = false;

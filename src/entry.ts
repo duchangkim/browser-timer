@@ -1,2 +1,2 @@
-import Timer from './core/Timer';
+import { Timer } from './core/Timer';
 export = Timer;

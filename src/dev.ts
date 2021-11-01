@@ -1,4 +1,4 @@
-import Timer from './core/Timer';
+import { Timer } from './core/Timer';
 
 // simple usage
 const simpleUsage = () => {
