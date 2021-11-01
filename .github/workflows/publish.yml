@@ -12,7 +12,7 @@ jobs:
         nvm use node 14
         git checkout ${{ env.TRIGGERED_BRANCH }}
         git pull origin ${{ env.TRIGGERED_BRANCH }}
-      BUILD_SCRIPT: npm run ${{ env.TRIGGERED_BRANCH == 'master' && 'build' || 'dev-build' }}
+      # BUILD_SCRIPT: npm run ${{ env.TRIGGERED_BRANCH == 'master' && 'build' || 'dev-build' }}
     runs-on: ubuntu-latest
     steps:
       - name: dev deploy
@@ -24,7 +24,8 @@ jobs:
           key: ${{ secrets.TEST_SSH_KEY }}
           script: | 
             ${{ env.PRE_BUILD_SCRIPT }}
-            ${{ env.BUILD_SCRIPT }}
+            npm run build
+
       - name: main deploy
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'main' }}
@@ -34,5 +35,4 @@ jobs:
           key: ${{ secrets.TEST_SSH_KEY }}
           script: | 
             ${{ env.PRE_BUILD_SCRIPT }}
-            ${{ env.BUILD_SCRIPT }}
-            echo ${{ env.PRE_BUILD_SCRIPT }}
+            npm run dev-build
