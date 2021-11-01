@@ -4,17 +4,20 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-  BUILD_SCRIPT: |
-              whoami
-              cd /var/www/browser-timer
-              pwd
-              git branch
-              echo ${{ github.ref }}
-              echo ${{ env.TRIGGERED_BRANCH }}
-              sudo git checkout ${{ env.TRIGGERED_BRANCH }}
+
 
 jobs:
-  deploy: 
+  deploy:
+    env:
+      BUILD_SCRIPT: |
+            whoami
+            cd /var/www/browser-timer
+            pwd
+            git branch
+            echo ${{ github.ref }}
+            echo ${{ env.TRIGGERED_BRANCH }}
+            sudo git checkout ${{ env.TRIGGERED_BRANCH }}
+
     runs-on: ubuntu-latest
     steps:
       - name: dev deploy
