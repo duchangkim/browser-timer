@@ -9,14 +9,23 @@ jobs:
       
     runs-on: ubuntu-latest
     steps:
-      - name: Public IP
+      - name: Get github actions IP
         id: ip
         uses: haythem/public-ip@v1.2
 
-      - name: Print Public IP
+      - name: Setting environment variables
         run: |
-          echo ${{ steps.ip.outputs.ipv4 }}
-          echo ${{ steps.ip.outputs.ipv6 }}
+          echo "AWS_DEFAULT_REGION=us-east-2" >> $GITHUB_ENV
+          echo "AWS_SG_NAME=github-actions" >> $GITHUB_ENV
+
+      - name: Add github actions IP to security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
       - name: dev deploy
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
@@ -38,3 +47,12 @@ jobs:
           script: | 
             ${{ env.PRE_BUILD_SCRIPT }}
             npm run dev-build
+
+        - name: Remove github actions IP from security group
+          run: |
+            aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
+            AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          if: ${{ always() }}
