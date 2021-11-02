@@ -48,11 +48,11 @@ jobs:
             ${{ env.PRE_BUILD_SCRIPT }}
             npm run dev-build
 
-        - name: Remove github actions IP from security group
-          run: |
-            aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
-            AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          if: ${{ always() }}
+      - name: Remove github actions IP from security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+        if: ${{ always() }}
