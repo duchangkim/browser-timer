@@ -16,9 +16,9 @@ export class Timer {
   private msCount = 0;
   private endTime = 0;
   private timerSeconds = 0;
-  private timerTenthsSeconds = 0; // 1자리
-  private timerHundredthsSeconds = 0; // 2자리
-  private timerMilliseconds = 0; // 3자리
+  private timerTenthsSeconds = 0;
+  private timerHundredthsSeconds = 0;
+  private timerMilliseconds = 0;
 
   constructor(options: TimerOptions) {
     this.eventBus = new EventBus();
@@ -60,7 +60,6 @@ export class Timer {
   }
 
   reset(second?: number) {
-
     if (second) {
       this.seconds = second;
     }
@@ -87,30 +86,27 @@ export class Timer {
       window.clearInterval(this.intervalRef);
       this.intervalRef = 0;
       this.eventBus.emit('finish');
-      this.eventBus.emit('secondsUpdated');
-      this.eventBus.emit('tenthsSecondsUpdated');
-      this.eventBus.emit('hundredthsSecondsUpdated');
       this.eventBus.emit('millisecondsUpdated');
     }
 
-    /**
+    /*
      * 1000ms === 1sec
      * 100cs === 1sec  1cs === 10ms
      * 10ds === 1sec   1ds === 100ms
      */
-    const ms = this.msCount <= 0 ? 0 : this.msCount % 1000; // 3자리 100분의 1초
+    const ms = this.msCount <= 0 ? 0 : this.msCount % 1000;
     if (this.timerMilliseconds !== ms) {
       this.timerMilliseconds = ms;
       this.eventBus.emit('millisecondsUpdated');
     }
 
-    const cs = Math.floor(ms / 10); // 100cs === 1s
+    const cs = Math.floor(ms / 10);
     if (this.timerHundredthsSeconds !== cs) {
       this.timerHundredthsSeconds = cs;
-      this.eventBus.emit('hundredthsSecondsUpdated'); // 1초의 1/10 === 1000ms * 0.1
+      this.eventBus.emit('hundredthsSecondsUpdated');
     }
 
-    const ds = Math.floor(ms / 100); // 10ds === 1s
+    const ds = Math.floor(ms / 100);
     if (this.timerTenthsSeconds !== ds) {
       this.timerTenthsSeconds = ds;
       this.eventBus.emit('tenthsSecondsUpdated');
@@ -129,7 +125,7 @@ export class Timer {
 
   /**
    * Returns seconds
-   * 
+   *
    * @returns `seconds`
    */
   getSeconds(): number {
@@ -138,7 +134,7 @@ export class Timer {
 
   /**
    * Returns 1/10th of a second
-   * 
+   *
    * @returns `deciseconds`
    */
   getTenthsSeconds(): number {
@@ -147,7 +143,7 @@ export class Timer {
 
   /**
    * Returns 1/100th of a second
-   * 
+   *
    * @returns `centiseconds`
    */
   getHundredthsSeconds(): number {
@@ -156,7 +152,7 @@ export class Timer {
 
   /**
    * Returns 1/1000th of a second (1000ms === 1s)
-   * 
+   *
    * @returns `milliseconds`
    */
   getMilliseconds(): number {
