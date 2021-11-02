@@ -36,7 +36,7 @@ jobs:
           script: |
             cd /var/www/browser-timer
             pwd
-            echo ${{ github.action_path }}
+            echo ${{ github }}
 
       - name: Remove github actions IP from security group
         run: |
