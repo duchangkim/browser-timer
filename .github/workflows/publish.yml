@@ -30,12 +30,9 @@ jobs:
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
         with:
-          host: ${{ secrets.TEST_HOST }}
+          host: "172.31.20.98"
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
-          proxy_host: '172.31.20.98'
-          proxy_username: unbuntu
-          proxy_key: ${{ secrets.TEST_SSH_KEY }}
           script: |
             whoami
             echo "yee~"
