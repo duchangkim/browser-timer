@@ -30,10 +30,11 @@ jobs:
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
         with:
-          host: ${{ secrets.TEST_HOST }}
+          host: ${{ secrets.PROXY_HOST }}
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
+            ssh -i ~/.ssh/githubActionsTest.pem ubuntu@${{ secrets.TEST_HOST }}
             cd /var/www/browser-timer
             pwd
             echo ${{ github }}
