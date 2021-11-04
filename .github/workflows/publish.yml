@@ -34,6 +34,8 @@ jobs:
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
+            ip addr
+            ifconfig
             ssh -i ~/.ssh/githubActionsTest.pem ubuntu@52.15.185.215
             cd /var/www/browser-timer
             pwd
