@@ -34,9 +34,10 @@ jobs:
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
+            echo "yee~"
             ip addr
             ifconfig
-            ssh -i ~/.ssh/githubActionsTest.pem ubuntu@52.15.185.215
+            sudo ssh -i ~/.ssh/githubActionsTest.pem ubuntu@52.15.185.215
             cd /var/www/browser-timer
             pwd
             echo ${{ github }}
