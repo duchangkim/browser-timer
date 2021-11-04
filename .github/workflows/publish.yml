@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
-            ssh -i ~/.ssh/githubActionsTest.pem ubuntu@${{ secrets.TEST_HOST }}
+            ssh -i ~/.ssh/githubActionsTest.pem ubuntu@52.15.185.215
             cd /var/www/browser-timer
             pwd
             echo ${{ github }}
