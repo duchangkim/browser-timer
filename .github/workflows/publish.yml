@@ -4,6 +4,7 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
+  SCRIPT: cd /var/www/browser-timer; git pull; pwd;
 jobs:
   deploy:
       
@@ -37,12 +38,8 @@ jobs:
             whoami
             echo "yee~"
             echo "********************************************************"
-            sh ~/.ssh/prod.sh
-            echo "i'm in prod ec2?"
-            cd /var/www/browser-timer
-            pwd
-            echo ${{ github }}
-            git pull
+            ssh -i ~/.ssh/githubActionsTest.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.SCRIPT }}"
+            exit
 
       - name: Remove github actions IP from security group
         run: |
