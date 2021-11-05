@@ -36,10 +36,9 @@ jobs:
           script: |
             whoami
             echo "yee~"
-            ip addr
-            ifconfig
-            pwd
+            echo "********************************************************"
             sh ~/.ssh/prod.sh
+            echo "i'm in prod ec2?"
             cd /var/www/browser-timer
             pwd
             echo ${{ github }}
