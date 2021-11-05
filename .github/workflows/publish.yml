@@ -5,8 +5,8 @@ on:
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
   BUILD: |
-    #!/bin/bash
     cd /var/www/browser-timer
+    pwd
     sudo git checkout actionsTest
     sudo git fetch
     CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
