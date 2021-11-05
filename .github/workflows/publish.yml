@@ -4,11 +4,21 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-  SCRIPT: |
+  BUILD_SCRIPT: |
     cd /var/www/browser-timer
+    sudo nvm use node 14
+    sudo git checkout actionsTest
     sudo git fetch
-    sudo git pull
-    pwd
+    CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
+    sudo git pull origin actionsTest
+    if [[ $CHANGED_FILES =~ \.js|\.vue|\.css|\.scss|\.json|\.html ]]; then
+      if [[ $CHANGED_FILES =~ package|package\.lock\.json ]]; then
+        echo "* run npm ci *"
+        sudo npm ci
+      fi
+      echo "* run npm build *"
+      sudo npm run build
+    fi
 jobs:
   deploy:
       
@@ -42,7 +52,7 @@ jobs:
             whoami
             echo "yee~"
             echo "********************************************************"
-            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.SCRIPT }}"
+            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.BUILD_SCRIPT }}"
             exit
 
       - name: Remove github actions IP from security group
