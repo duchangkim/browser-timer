@@ -7,7 +7,6 @@ env:
   BUILD: |
     #!/bin/bash
     cd /var/www/browser-timer
-    sudo nvm use node 14
     sudo git checkout actionsTest
     sudo git fetch
     CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
