@@ -30,7 +30,7 @@ jobs:
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
         with:
-          host: "172.31.20.98"
+          host: "3.140.208.21"
           username: ${{ secrets.TEST_USERNAME }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
