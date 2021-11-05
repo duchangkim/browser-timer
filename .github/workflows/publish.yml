@@ -4,7 +4,7 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-  BUILD_SCRIPT: |
+  BUILD: |
     cd /var/www/browser-timer
     sudo nvm use node 14
     sudo git checkout actionsTest
@@ -52,7 +52,7 @@ jobs:
             whoami
             echo "yee~"
             echo "********************************************************"
-            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.BUILD_SCRIPT }}"
+            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.BUILD }}"
             exit
 
       - name: Remove github actions IP from security group
