@@ -6,9 +6,19 @@ env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
   SCRIPT: |
     cd /var/www/browser-timer
+    sudo nvm use node 14
+    sudo git checkout actionsTest
     sudo git fetch
-    sudo git pull
-    pwd
+    CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
+    sudo git pull origin actionsTest
+    if [[ $CHANGED_FILES =~ \.js|\.vue|\.css|\.scss|\.json|\.html ]]; then
+      if [[ $CHANGED_FILES =~ package|package\.lock\.json ]]; then
+        echo "* run npm ci *"
+        sudo npm ci
+      fi
+      echo "* run npm build *"
+      sudo npm run build
+    fi
 jobs:
   deploy:
       
