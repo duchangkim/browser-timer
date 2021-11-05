@@ -38,9 +38,12 @@ jobs:
             echo "yee~"
             ip addr
             ifconfig
+            pwd
+            sh ~/.ssh/prod.sh
             cd /var/www/browser-timer
             pwd
             echo ${{ github }}
+            git pull
 
       - name: Remove github actions IP from security group
         run: |
