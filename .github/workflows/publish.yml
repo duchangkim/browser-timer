@@ -11,8 +11,8 @@ env:
     sudo git fetch
     CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
     sudo git pull origin actionsTest
-    if [[ $CHANGED_FILES =~ \.js|\.vue|\.css|\.scss|\.json|\.html ]]; then
-      if [[ $CHANGED_FILES =~ package|package\.lock\.json ]]; then
+    if [[ egrep '\.js|\.vue|\.css|\.scss|\.json|\.html' $CHANGED_FILES ]]; then
+      if [[ egrep 'package|package\.lock\.json' $CHANGED_FILES ]]; then
         echo "* run npm ci *"
         sudo npm ci
       fi
