@@ -38,7 +38,7 @@ jobs:
             whoami
             echo "yee~"
             echo "********************************************************"
-            ssh -i -T ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.SCRIPT }}"
+            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.SCRIPT }}"
             exit
 
       - name: Remove github actions IP from security group
