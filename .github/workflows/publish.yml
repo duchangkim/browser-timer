@@ -5,6 +5,7 @@ on:
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
   BUILD: |
+    #!/bin/bash
     cd /var/www/browser-timer
     sudo nvm use node 14
     sudo git checkout actionsTest
