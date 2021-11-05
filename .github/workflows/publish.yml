@@ -4,7 +4,12 @@ on:
     branches: [ actionsTest ]
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
-  SCRIPT: cd /var/www/browser-timer; sudo git pull; pwd;
+  SCRIPT: "
+    cd /var/www/browser-timer
+    sudo git fetch
+    sudo git pull
+    pwd
+  "
 jobs:
   deploy:
       
