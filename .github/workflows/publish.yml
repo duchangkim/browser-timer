@@ -30,12 +30,12 @@ jobs:
       - name: dev deploy
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
+        env: 
+          AWS_VARS: ${{ env.IS_PROD == true && 'PROD' || 'DEV' }}
         with:
           host: "${{ secrets.PROXY_HOST }}"
           username: ubuntu
           key: ${{ secrets.TEST_SSH_KEY }}
-          env: 
-            AWS_VARS: ${{ env.IS_PROD == 'true' && 'PROD' || env.IS_PROD != 'true' && 'DEV' }}
           script: |
             echo "*** ${{ env.AWS_VARS }} ***"
             whoami
