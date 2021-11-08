@@ -37,6 +37,15 @@ jobs:
           username: ubuntu
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
+            if [ ${{ env.TRIGGERED_BRANCH }} == 'actionsTest' ]; then
+              echo "!!!! actionsTest !!!!!"
+              echo "AWS_DEFAULT_REGION=ap-northeast-2" >> $GITHUB_ENV
+              echo "AWS_SG_NAME=bastion-host-SG" >> $GITHUB_ENV
+            else
+              echo "!!!! NO!!! actionsTest !!!!!"
+              echo "AWS_DEFAULT_REGION=ap-northeast-2" >> $GITHUB_ENV
+              echo "AWS_SG_NAME=ec2-peterpanz" >> $GITHUB_ENV
+            fi
             echo "*** ${{ env.IS_PROD }} ***"
             echo "*** ${{ env.AWS_VARS }} ***"
             whoami
