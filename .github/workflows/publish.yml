@@ -17,6 +17,7 @@ jobs:
         run: |
           echo "AWS_DEFAULT_REGION=us-east-2" >> $GITHUB_ENV
           echo "AWS_SG_NAME=launch-wizard-3" >> $GITHUB_ENV
+          echo "IS_PROD=true" >> $GITHUB_ENV
 
       - name: Add github actions IP to security group
         run: |
@@ -33,7 +34,10 @@ jobs:
           host: "${{ secrets.PROXY_HOST }}"
           username: ubuntu
           key: ${{ secrets.TEST_SSH_KEY }}
+          env: 
+            AWS_VARS: ${{ env.IS_PROD && 'PROD' || 'DEV' }}
           script: |
+            echo "*** ${{ env.AWS_VARS }} ***"
             whoami
             touch ceo-prod.sh
             echo "parallel-ssh -i -h ~/.ssh/hosts -x '-i ~/.ssh/github-actions-test.pem' \"" >> ceo-prod.sh
