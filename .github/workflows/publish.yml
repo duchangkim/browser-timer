@@ -35,7 +35,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.TEST_SSH_KEY }}
           env: 
-            AWS_VARS: ${{ env.IS_PROD && 'PROD' || 'DEV' }}
+            AWS_VARS: ${{ env.IS_PROD == true && 'PROD' || 'DEV' }}
           script: |
             echo "*** ${{ env.AWS_VARS }} ***"
             whoami
