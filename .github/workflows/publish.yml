@@ -5,20 +5,22 @@ on:
 env:
   TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
   BUILD: |
-    cd /var/www/browser-timer
-    pwd
-    sudo git checkout actionsTest
-    sudo git fetch
-    CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
-    sudo git pull origin actionsTest
-    if [[ egrep '\.js|\.vue|\.css|\.scss|\.json|\.html' $CHANGED_FILES ]]; then
-      if [[ egrep 'package|package\.lock\.json' $CHANGED_FILES ]]; then
-        echo "* run npm ci *"
-        sudo npm ci
-      fi
-      echo "* run npm build *"
-      sudo npm run build
-    fi
+cd /var/www/browser-timer
+pwd
+sudo git checkout actionsTest
+sudo git fetch
+CHANGED_FILES=$(sudo git diff actionsTest origin/actionsTest --name-only)
+sudo git pull origin actionsTest
+if [[ egrep '\.js|\.vue|\.css|\.scss|\.json|\.html' $CHANGED_FILES ]]; then
+  if [[ egrep 'package|package\.lock\.json' $CHANGED_FILES ]]; then
+    echo "* run npm ci *"
+    sudo npm ci
+  fi
+  echo "* run npm build *"
+  sudo npm run build
+fi
+echo "* run pull *"
+exit
 jobs:
   deploy:
       
@@ -45,14 +47,34 @@ jobs:
         uses: appleboy/ssh-action@master
         if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
         with:
-          host: "3.140.208.21"
-          username: ${{ secrets.TEST_USERNAME }}
+          host: "${{ secrets.PROXY_HOST }}"
+          username: ubuntu
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
             whoami
-            echo "yee~"
-            echo "********************************************************"
-            ssh -t -i ~/.ssh/github-actions-test.pem ${{ secrets.TEST_USERNAME }}@${{ secrets.TEST_HOST }} "${{ env.BUILD }}"
+            touch ceo-prod.sh
+            echo "parallel-ssh -i -h ~/.ssh/hosts -x '-i ~/.ssh/github-actions-test.pem' \"" >> ceo-prod.sh
+            echo "whoami" >> ceo-prod.sh
+            echo "cd /var/www/codingtest-java" >> ceo-prod.sh
+            echo "git checkout master" >> ceo-prod.sh
+            echo "git fetch" >> ceo-prod.sh
+            echo "CHANGED_FILES=\\\$(git diff master origin/master --name-only)" >> ceo-prod.sh
+            echo "echo '* run git pull *'" >> ceo-prod.sh
+            echo "git pull origin master" >> ceo-prod.sh
+            echo "if [[ \\\$CHANGED_FILES =~ \.js|\.vue|\.css|\.scss|\.json|\.html ]]; then" >> ceo-prod.sh
+            echo "  if [[ \\\$CHANGED_FILES =~ package|package\.lock\.json ]]; then" >> ceo-prod.sh
+            echo "        echo '* run npm ci *'" >> ceo-prod.sh
+            echo "        npm ci" >> ceo-prod.sh
+            echo "    fi" >> ceo-prod.sh
+            echo "    echo '* run npm build *'" >> ceo-prod.sh
+            echo "    npm run build" >> ceo-prod.sh
+            echo "fi" >> ceo-prod.sh
+            echo "echo '* PRODUCTION DEPLOY COMPLETED *'" >> ceo-prod.sh
+            echo "exit" >> ceo-prod.sh
+            echo "\"" >> ceo-prod.sh
+            sh ceo-prod.sh
+            rm -f ceo-prod.sh
+            echo "PRODUCTION DEPLOY DONE!"
             exit
 
       - name: Remove github actions IP from security group
