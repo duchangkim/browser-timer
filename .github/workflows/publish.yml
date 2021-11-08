@@ -1,26 +1,84 @@
-name: Npm_publish
+name: TEST
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ actionsTest ]
+env:
+  TRIGGERED_BRANCH: ${{ github.ref == 'refs/heads/main' && 'main' || github.ref == 'refs/heads/actionsTest' && 'actionsTest'}}
 jobs:
-  publish: 
+  deploy:
+      
     runs-on: ubuntu-latest
     steps:
-      # Checkout
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      
-      - name: Install dependencies
-        run: npm install
+      - name: Get github actions IP
+        id: ip
+        uses: haythem/public-ip@v1.2
 
-      - name: Build
-        run: npm run build
+      - name: Setting environment variables
+        run: |
+          echo "AWS_DEFAULT_REGION=us-east-2" >> $GITHUB_ENV
+          echo "AWS_SG_NAME=launch-wizard-3" >> $GITHUB_ENV
+          echo "IS_PROD=true" >> $GITHUB_ENV
 
-      - name: Publish
-        uses: JS-DevTools/npm-publish@v1
+      - name: Add github actions IP to security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: dev deploy
+        uses: appleboy/ssh-action@master
+        if: ${{ env.TRIGGERED_BRANCH == 'actionsTest' }}
+        env: 
+          AWS_VARS: ${{ env.IS_PROD == 'true' && 'PROD' || 'DEV' }}
         with:
-          token: ${{ secrets.NPM_TOKEN }}
+          host: "${{ secrets.PROXY_HOST }}"
+          username: ubuntu
+          key: ${{ secrets.TEST_SSH_KEY }}
+          script: |
+            if [ ${{ env.TRIGGERED_BRANCH }} == 'actionsTest' ]; then
+              echo "!!!! actionsTest !!!!!"
+              echo "AWS_DEFAULT_REGION=ap-northeast-2" >> $GITHUB_ENV
+              echo "AWS_SG_NAME=bastion-host-SG" >> $GITHUB_ENV
+            else
+              echo "!!!! NO!!! actionsTest !!!!!"
+              echo "AWS_DEFAULT_REGION=ap-northeast-2" >> $GITHUB_ENV
+              echo "AWS_SG_NAME=ec2-peterpanz" >> $GITHUB_ENV
+            fi
+            echo "*** ${{ env.IS_PROD }} ***"
+            echo "*** ${{ env.AWS_VARS }} ***"
+            whoami
+            touch ceo-prod.sh
+            echo "parallel-ssh -i -h ~/.ssh/hosts -x '-i ~/.ssh/github-actions-test.pem' \"" >> ceo-prod.sh
+            echo "whoami" >> ceo-prod.sh
+            echo "cd /var/www/codingtest-java" >> ceo-prod.sh
+            echo "git checkout master" >> ceo-prod.sh
+            echo "git fetch" >> ceo-prod.sh
+            echo "CHANGED_FILES=\\\$(git diff master origin/master --name-only)" >> ceo-prod.sh
+            echo "echo '* run git pull *'" >> ceo-prod.sh
+            echo "git pull origin master" >> ceo-prod.sh
+            echo "if [[ \\\$CHANGED_FILES =~ \.js|\.vue|\.css|\.scss|\.json|\.html ]]; then" >> ceo-prod.sh
+            echo "  if [[ \\\$CHANGED_FILES =~ package|package\.lock\.json ]]; then" >> ceo-prod.sh
+            echo "        echo '* run npm ci *'" >> ceo-prod.sh
+            echo "        npm ci" >> ceo-prod.sh
+            echo "    fi" >> ceo-prod.sh
+            echo "    echo '* run npm build *'" >> ceo-prod.sh
+            echo "    npm run build" >> ceo-prod.sh
+            echo "fi" >> ceo-prod.sh
+            echo "echo '* PRODUCTION DEPLOY COMPLETED *'" >> ceo-prod.sh
+            echo "exit" >> ceo-prod.sh
+            echo "\"" >> ceo-prod.sh
+            sh ceo-prod.sh
+            rm -f ceo-prod.sh
+            echo "PRODUCTION DEPLOY DONE!"
+            exit
+
+      - name: Remove github actions IP from security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-name ${{ env.AWS_SG_NAME }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECURE_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECURE_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+        if: ${{ always() }}
