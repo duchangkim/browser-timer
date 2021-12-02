@@ -74,7 +74,7 @@ export class Timer {
     this.seconds = seconds;
   }
 
-  countdown() {
+  private countdown() {
     const currentTime = Date.now();
     this.msCount = this.endTime - currentTime;
 
@@ -119,7 +119,7 @@ export class Timer {
     }
   }
 
-  timer() {
+  private timer() {
     // @todo 타이머 로직 작성
   }
 
