@@ -14,12 +14,6 @@ timer.setSeconds(10);
 timer.start();
 ```
 
-## Examples
-* 시간 표시를 하지 않는 카운트다운 타이머
-* 시간이 표시되는 카운트다운 타이머
-* 자세한 시간이 표시되는 (밀리초) 카운트다운 타이머
-* 특정 시간에 특정 함수 실행하는 예제
-
 ## API Document
 ### 1. Countdown timer options
 ```typescript
@@ -184,6 +178,105 @@ timer.addEventListener(EventName, callback);
  * 타이머가 초기화될 때 트리거 됩니다.
  */
 'reset'
+```
+
+## Examples (stackblitz)
+* [시간 표시를 하지 않는 카운트다운 타이머](https://stackblitz.com/edit/typescript-ceqnfv?file=index.ts)
+```typescript
+import Timer from 'browser-timer';
+
+const countdownTimer = new Timer({ type: 'countdown' });
+
+countdownTimer.addEventListener('finish', () => {
+  alert('countdown is done!');
+});
+
+document.getElementById('start').addEventListener('click', () => {
+  countdownTimer.setSeconds(5);
+  countdownTimer.start();
+});
+```
+
+* [카운트다운 타이머 시작, 일시정지, 정지, 리셋](https://stackblitz.com/edit/typescript-a1pmrv?file=index.ts)
+```typescript
+import Timer from 'browser-timer';
+
+const countdownTimer = new Timer({ type: 'countdown' });
+const sec = document.getElementById('sec');
+const ms = document.getElementById('ms');
+
+countdownTimer.addEventListener('finish', () => {
+  document.getElementById('timeSpace').style.color = 'red';
+});
+countdownTimer.addEventListener('secondsUpdated', () => {
+  sec.innerHTML = countdownTimer.getSeconds().toString();
+});
+countdownTimer.addEventListener('hundredthsSecondsUpdated', () => {
+  ms.innerHTML = countdownTimer.getHundredthsSeconds().toString();
+});
+
+document.getElementById('start').addEventListener('click', () => {
+  countdownTimer.setSeconds(5);
+  countdownTimer.start();
+  (document.getElementById('pause') as HTMLButtonElement).disabled = false;
+  document.getElementById('timeSpace').style.color = 'black';
+});
+
+document.getElementById('pause').addEventListener('click', () => {
+  (document.getElementById('start2') as HTMLButtonElement).disabled = false;
+  countdownTimer.pause();
+});
+document.getElementById('start2').addEventListener('click', () => {
+  countdownTimer.start();
+});
+document.getElementById('stop').addEventListener('click', () => {
+  countdownTimer.stop();
+});
+document.getElementById('reset').addEventListener('click', () => {
+  countdownTimer.reset(10);
+  ms.innerHTML = '00';
+});
+```
+
+* [시간이 표시되는 카운트다운 타이머](https://stackblitz.com/edit/typescript-vt3rgb?file=index.ts)
+```typescript
+import Timer from 'browser-timer';
+
+const countdownTimer = new Timer({ type: 'countdown' });
+const timeSpace = document.getElementById('timeSpace');
+
+countdownTimer.addEventListener('finish', () => {
+  alert('countdown is done!');
+});
+countdownTimer.addEventListener('secondsUpdated', () => {
+  timeSpace.innerHTML = countdownTimer.getSeconds().toString();
+});
+
+document.getElementById('start').addEventListener('click', () => {
+  countdownTimer.setSeconds(5);
+  countdownTimer.start();
+});
+```
+
+* [자세한 시간이 표시되는 (밀리초) 카운트다운 타이머](https://stackblitz.com/edit/typescript-zjgerm?file=index.ts)
+```typescript
+import Timer from 'browser-timer';
+
+const countdownTimer = new Timer({ type: 'countdown' });
+const sec = document.getElementById('sec');
+const ms = document.getElementById('ms');
+
+countdownTimer.addEventListener('secondsUpdated', () => {
+  sec.innerHTML = countdownTimer.getSeconds().toString();
+});
+countdownTimer.addEventListener('millisecondsUpdated', () => {
+  ms.innerHTML = countdownTimer.getMilliseconds().toString();
+});
+
+document.getElementById('start').addEventListener('click', () => {
+  countdownTimer.setSeconds(5);
+  countdownTimer.start();
+});
 ```
 
 <br/>
