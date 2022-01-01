@@ -34,11 +34,11 @@ export class Timer {
     if (this.intervalRef > 0) return;
 
     if (!this.isPause) {
+      // start한 시점 저장
+      this.startTime = Date.now();
       this.msCount = this.seconds * 1000;
     }
 
-    // start한 시점 저장
-    this.startTime = Date.now();
     this.endTime = Date.now() + this.msCount;
     this.intervalRef = window.setInterval(
       () => (this.type === 'countdown' ? this.countdown() : this.timer()),
