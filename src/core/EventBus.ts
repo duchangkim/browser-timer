@@ -1,4 +1,6 @@
 export type EventName =
+  | 'hoursUpdated'
+  | 'minutesUpdated'
   | 'secondsUpdated'
   | 'tenthsSecondsUpdated'
   | 'hundredthsSecondsUpdated'

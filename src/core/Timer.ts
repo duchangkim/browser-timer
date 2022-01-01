@@ -14,7 +14,10 @@ export class Timer {
   private type: TimerType;
   private seconds: number;
   private msCount = 0;
+  private startTime = 0;
   private endTime = 0;
+  private timerHours = 0;
+  private timerMinutes = 0;
   private timerSeconds = 0;
   private timerTenthsSeconds = 0;
   private timerHundredthsSeconds = 0;
@@ -34,6 +37,8 @@ export class Timer {
       this.msCount = this.seconds * 1000;
     }
 
+    // start한 시점 저장
+    this.startTime = Date.now();
     this.endTime = Date.now() + this.msCount;
     this.intervalRef = window.setInterval(
       () => (this.type === 'countdown' ? this.countdown() : this.timer()),
@@ -72,6 +77,30 @@ export class Timer {
 
   setSeconds(seconds: number) {
     this.seconds = seconds;
+  }
+
+  private convertMs(ms: number): number {
+    return ms <= 0 ? 0 : ms % 1000;
+  }
+
+  private convertMsToCs(ms: number): number {
+    return Math.floor(this.convertMs(ms) / 10);
+  }
+
+  private convertMsToDs(ms: number): number {
+    return Math.floor(this.convertMs(ms) / 100);
+  }
+
+  private convertMsToSeconds(ms: number): number {
+    return ms <= 0 ? 0 : Math.floor(ms / 1000);
+  }
+
+  private convertMsToMinutes(ms: number): number {
+    return Math.floor(ms / 60000);
+  }
+
+  private convertMsToHours(ms: number): number {
+    return Math.floor(ms / 3600000);
   }
 
   private countdown() {
@@ -120,7 +149,63 @@ export class Timer {
   }
 
   private timer() {
-    // @todo 타이머 로직 작성
+    const currentTime = Date.now();
+    // 시작시간에서 timer가 불러진 시점의 시간에서 타이머를 시작한 시점의 시간을 빼면 지나간 시간이 됨.
+    this.msCount = currentTime - this.startTime;
+
+    const ms = this.convertMs(this.msCount);
+    if (this.timerMilliseconds !== ms) {
+      this.timerMilliseconds = ms;
+      this.eventBus.emit('millisecondsUpdated');
+    }
+
+    const cs = this.convertMsToCs(this.msCount);
+    if (this.timerHundredthsSeconds !== cs) {
+      this.timerHundredthsSeconds = cs;
+      this.eventBus.emit('hundredthsSecondsUpdated');
+    }
+
+    const ds = this.convertMsToDs(this.msCount);
+    if (this.timerTenthsSeconds !== ds) {
+      this.timerTenthsSeconds = ds;
+      this.eventBus.emit('tenthsSecondsUpdated');
+    }
+
+    const s = this.convertMsToSeconds(this.msCount);
+    if (this.timerSeconds !== s) {
+      this.timerSeconds = s;
+      this.eventBus.emit('secondsUpdated');
+    }
+
+    const m = this.convertMsToMinutes(this.msCount);
+    if (this.timerMinutes !== m) {
+      this.timerMinutes = m;
+      this.eventBus.emit('minutesUpdated');
+    }
+
+    const h = this.convertMsToHours(this.msCount);
+    if (this.timerHours !== h) {
+      this.timerHours = h;
+      this.eventBus.emit('hoursUpdated');
+    }
+  }
+
+  /**
+   * Returns hours
+   *
+   * @returns `hours`
+   */
+  getHours(): number {
+    return this.timerHours;
+  }
+
+  /**
+   * Returns minutes
+   *
+   * @returns `minutes`
+   */
+  getMinutes(): number {
+    return this.timerMinutes;
   }
 
   /**
