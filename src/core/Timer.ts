@@ -64,11 +64,19 @@ export class Timer {
     this.eventBus.emit('stop');
   }
 
+  private resetAllTimeProperties(): void {
+    this.timerHours = 0;
+    this.timerMinutes = 0;
+    this.timerSeconds = 0;
+    this.timerTenthsSeconds = 0;
+    this.timerHundredthsSeconds = 0;
+    this.timerMilliseconds = 0;
+  }
+
   reset(second?: number) {
     if (this.type === 'timer') {
       this.startTime = Date.now();
-      this.emitAllTimeUpdateEvents();
-      this.eventBus.emit('reset');
+      this.resetAllTimeProperties();
 
       if (second) console.warn(`A timer reset does not require a parameter 'seconds'.`);
     } else if (this.type === 'countdown') {
@@ -79,9 +87,11 @@ export class Timer {
       this.msCount = this.seconds * 1000;
       this.endTime = Date.now() + this.msCount;
       this.timerSeconds = this.seconds;
-      this.emitAllTimeUpdateEvents();
-      this.eventBus.emit('reset');
     }
+
+    this.isPause = false;
+    this.emitAllTimeUpdateEvents();
+    this.eventBus.emit('reset');
   }
 
   setSeconds(seconds: number) {

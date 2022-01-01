@@ -26,6 +26,8 @@ const initPageButtons = () => {
 const simpleUsage = () => {
   const input = document.getElementById('simpleInput') as HTMLInputElement;
   const start = document.getElementById('simpleStart') as HTMLElement;
+  const reset = document.getElementById('simpleReset') as HTMLElement;
+  const pause = document.getElementById('simplePause') as HTMLElement;
   const timeSpace = document.getElementById('simpleTime') as HTMLElement;
   const seconds = timeSpace.querySelector('.s') as HTMLElement;
   const done = document.getElementById('simpleDone') as HTMLElement;
@@ -41,6 +43,12 @@ const simpleUsage = () => {
     done.innerText = '';
     timer.setSeconds(parseInt(input.value, 10));
     timer.start();
+  });
+  reset.addEventListener('click', () => {
+    timer.reset();
+  });
+  pause.addEventListener('click', () => {
+    timer.pause();
   });
 
   timer.addEventListener('secondsUpdated', () => {
