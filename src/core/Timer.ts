@@ -16,6 +16,7 @@ export class Timer {
   private msCount = 0;
   private startTime = 0;
   private endTime = 0;
+  private pauseTime = 0;
   private timerHours = 0;
   private timerMinutes = 0;
   private timerSeconds = 0;
@@ -37,6 +38,9 @@ export class Timer {
       // start한 시점 저장
       this.startTime = Date.now();
       this.msCount = this.seconds * 1000;
+    } else if (this.type === 'timer') {
+      // 현재 시간 - 일시정지한 시점의 시간 = 일시정지 하고 다시 시작(start)한 시간
+      this.startTime = this.startTime + (Date.now() - this.pauseTime);
     }
 
     this.endTime = Date.now() + this.msCount;
@@ -49,6 +53,10 @@ export class Timer {
 
   pause() {
     if (this.intervalRef === 0) return;
+
+    if (this.type === 'timer') {
+      this.pauseTime = Date.now();
+    }
 
     clearInterval(this.intervalRef);
     this.intervalRef = 0;
