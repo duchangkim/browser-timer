@@ -168,6 +168,15 @@ const timerUsage = () => {
   start.addEventListener('click', () => {
     timer.start();
   });
+  pause.addEventListener('click', () => {
+    timer.pause();
+  });
+  reset.addEventListener('click', () => {
+    timer.reset();
+  });
+  stop.addEventListener('click', () => {
+    timer.stop();
+  });
 
   timer.addEventListener('hoursUpdated', () => {
     const h = timer.getHours() % 24 === 0 ? 0 : timer.getHours() % 24;
