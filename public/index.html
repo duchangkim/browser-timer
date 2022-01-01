@@ -15,16 +15,12 @@
 
 <body>
   <main id="root">
-    <article>
-      <h1>browser-timer</h1>
-      <section>
-        <h2>Timer space</h2>
-        <input id="timerInput" type="number">
-        <button id="timerButton">Start</button>
-        <br />
-        <br />
-        <div id="timerSpace">00:00</div>
-      </section>
+    <header>
+      <button id="countdownPageButton">countdown</button>
+      <button id="timerPageButton">timer</button>
+    </header>
+    <article id="countdownWrapper">
+      <h1>browser-timer: countdown timer</h1>
       <hr />
       <section style="margin-top: 50px;">
         <h2>Countdown space</h2>
@@ -70,6 +66,22 @@
           <p id="milliTime">00:<span class="s">00</span>:<span class="ms">000</span></p>
           <div id="milliDone" class="done"></div>
         </article>
+      </section>
+    </article>
+    <article id="timerWrapper">
+      <h1>browser-timer: timer</h1>
+      <hr />
+      <section>
+        <h2>Timer space</h2>
+        <button id="timerStart">Start</button>
+        <button id="timerPause">Pause</button>
+        <button id="timerReset">Reset</button>
+        <button id="timerStop">Stop</button>
+        <br />
+        <br />
+        <div id="timerSpace">
+          <span class="h">00</span>:<span class="m">00</span>:<span class="s">00</span>:<span class="cs">000</span>
+        </div>
       </section>
     </article>
   </main>

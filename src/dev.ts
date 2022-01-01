@@ -1,5 +1,27 @@
 import { Timer } from './core/Timer';
 
+const initPageButtons = () => {
+  const countdownPageButton = document.getElementById(
+    'countdownPageButton',
+  ) as HTMLButtonElement;
+  const timerPageButton = document.getElementById('timerPageButton') as HTMLButtonElement;
+  const countdownWrapper = document.getElementById('countdownWrapper');
+  const timerWrapper = document.getElementById('timerWrapper');
+
+  countdownPageButton.addEventListener('click', () => {
+    if (!countdownWrapper || !timerWrapper) return;
+
+    countdownWrapper.style.display = 'block';
+    timerWrapper.style.display = 'none';
+  });
+  timerPageButton.addEventListener('click', () => {
+    if (!countdownWrapper || !timerWrapper) return;
+
+    countdownWrapper.style.display = 'none';
+    timerWrapper.style.display = 'block';
+  });
+};
+
 // simple usage
 const simpleUsage = () => {
   const input = document.getElementById('simpleInput') as HTMLInputElement;
@@ -129,9 +151,46 @@ const milliSeconds = () => {
   });
 };
 
+const timerUsage = () => {
+  const start = document.getElementById('timerStart') as HTMLElement;
+  const pause = document.getElementById('timerPause') as HTMLElement;
+  const reset = document.getElementById('timerReset') as HTMLElement;
+  const stop = document.getElementById('timerStop') as HTMLElement;
+  const timeSpace = document.getElementById('timerSpace') as HTMLElement;
+  const hours = timeSpace.querySelector('.h') as HTMLElement;
+  const minutes = timeSpace.querySelector('.m') as HTMLElement;
+  const seconds = timeSpace.querySelector('.s') as HTMLElement;
+  const centiseconds = timeSpace.querySelector('.cs') as HTMLElement;
+  const done = document.getElementById('milliDone') as HTMLElement;
+
+  const timer = new Timer({ type: 'timer' });
+
+  start.addEventListener('click', () => {
+    timer.start();
+  });
+
+  timer.addEventListener('hoursUpdated', () => {
+    const h = timer.getHours() % 24 === 0 ? 0 : timer.getHours() % 24;
+    hours.innerText = h.toString();
+  });
+  timer.addEventListener('minutesUpdated', () => {
+    const m = timer.getMinutes() % 60 === 0 ? 0 : timer.getMinutes() % 60;
+    minutes.innerText = m.toString();
+  });
+  timer.addEventListener('secondsUpdated', () => {
+    const s = timer.getSeconds() % 60 === 0 ? 0 : timer.getSeconds() % 60;
+    seconds.innerText = s.toString();
+  });
+  timer.addEventListener('hundredthsSecondsUpdated', () => {
+    centiseconds.innerText = timer.getHundredthsSeconds().toString();
+  });
+};
+
 window.onload = () => {
+  initPageButtons();
   simpleUsage();
   tenthsSeconds();
   hundredthsSeconds();
   milliSeconds();
+  timerUsage();
 };
