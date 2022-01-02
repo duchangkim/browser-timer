@@ -34,6 +34,8 @@ export class Timer {
   start() {
     if (this.intervalRef > 0) return;
 
+    this.eventBus.emit('start');
+
     if (!this.isPause) {
       // start한 시점 저장
       this.startTime = Date.now();
