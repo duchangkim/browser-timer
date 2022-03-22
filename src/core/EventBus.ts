@@ -5,6 +5,7 @@ export type EventName =
   | 'tenthsSecondsUpdated'
   | 'hundredthsSecondsUpdated'
   | 'millisecondsUpdated'
+  | 'start'
   | 'finish'
   | 'pause'
   | 'stop'
