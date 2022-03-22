@@ -9,8 +9,13 @@ npm i browser-timer
 ```javascript
 import Timer from 'browser-timer';
 
-const timer = new Timer({ type: 'countdown' });
-timer.setSeconds(10);
+const countdownTimer = new Timer({ type: 'countdown' });
+countdownTimer.setSeconds(10);
+countdownTimer.start();
+
+--------------------------------------------------------
+
+const timer = new Timer({ type: 'timer' });
 timer.start();
 ```
 
@@ -23,7 +28,7 @@ interface TimerOptions {
    * 
    * 타이머 인스턴스가 작동하는 방식을 결정하는 문자열 입니다. (카운트다운 타이머 또는 타이머)
    */
-  type: 'countdown' | 'timer'; // 'timer' is under development...
+  type: 'countdown' | 'timer';
   
   /**
    * 
@@ -50,7 +55,8 @@ timer.methods();
 /**
  * 타이머를 실행시키는 함수입니다.
  * 카운트다운 타이머라면 timer.setSeconds()로 설정한 시간부터 시작합니다.
- * 타이머라면 0부터 시작합니다.
+ * 
+ * 타이머라면 0(start()한 시간부터)부터 시작합니다.
  */
 start(): void
 ```
@@ -74,7 +80,9 @@ stop(): void
 ```typescript
 /**
  * 초기에 설정했던 또는 timer.setSeconds()로 설정했던 시간부터 다시 시작하는 함수입니다.
- * second(10)과 같이 매개변수를 전달하면 매개변수로 전달된 시간부터(초) 다시 시작합니다.
+ * second(10)과 같이 매개변수를 전달하면 매개변수로 전달된 시간부터(초) 다시 시작합니다.(카운트다운 타이머의 경우)
+ * 
+ * 0부터 시작하는 타이머의 경우 second 매개변수는 전달 할 필요가 없습니다.
  */
 reset(second?: number): void
 ```
@@ -112,7 +120,17 @@ setSeconds(seconds: number): void;
 
 // Getters
 /**
- * 타이머 인스턴스의 초를 리턴합니다.
+ * 타이머 인스턴스의 시(h)를 리턴합니다.
+ */
+getHours(): number
+
+/**
+ * 타이머 인스턴스의 분(m)을 리턴합니다.
+ */
+getMinutes(): number
+
+/**
+ * 타이머 인스턴스의 초(s)를 리턴합니다.
  */
 getSeconds(): number
 
@@ -137,6 +155,16 @@ getMilliseconds(): number
 ```typescript
 timer.addEventListener(EventName, callback);
 /**
+ * 타이머가 실행된 이후 매 1시간마다 트리거 됩니다.
+ */ 
+'hoursUpdated'
+
+/**
+ * 타이머가 실행된 이후 매 1분마다 트리거 됩니다.
+ */ 
+'minutesUpdated'
+
+/**
  * 타이머가 실행된 이후 매 1초마다 트리거 됩니다.
  */ 
 'secondsUpdated'
@@ -157,6 +185,11 @@ timer.addEventListener(EventName, callback);
  * 타이머가 실행된 이후 매 1밀리초마다 트리거 됩니다.
  */
 'millisecondsUpdated'
+
+/**
+ * 타이머가 시작될 때 트리거 됩니다.
+ */
+'start'
 
 /**
  * 타이머가 종료될 때 트리거 됩니다.
@@ -276,6 +309,33 @@ countdownTimer.addEventListener('millisecondsUpdated', () => {
 document.getElementById('start').addEventListener('click', () => {
   countdownTimer.setSeconds(5);
   countdownTimer.start();
+});
+```
+
+* [자세한 시간이 표시되는 일반 타이머(0부터 시작)](https://stackblitz.com/edit/typescript-zwrxod?file=index.ts)
+```typescript
+import Timer from 'browser-timer';
+
+const timer = new Timer({ type: 'timer' });
+
+document.getElementById('start').addEventListener('click', () => {
+  timer.start();
+});
+
+timer.addEventListener('hoursUpdated', () => {
+  h.innerHTML = timer.getSeconds().toString();
+});
+
+timer.addEventListener('minutesUpdated', () => {
+  m.innerHTML = timer.getSeconds().toString();
+});
+
+timer.addEventListener('secondsUpdated', () => {
+  sec.innerHTML = timer.getSeconds().toString();
+});
+
+timer.addEventListener('millisecondsUpdated', () => {
+  ms.innerHTML = timer.getMilliseconds().toString();
 });
 ```
 
