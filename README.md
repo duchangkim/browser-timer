@@ -1,3 +1,5 @@
+KOR | [ENG](https://github.com/duchangkim/browser-timer/blob/main/README_ENG.md)
+
 # browser-timer
 
 자바스크립트로 작성한 카운트다운 타이머, 타이머 라이브러리 입니다.
@@ -341,6 +343,10 @@ timer.addEventListener('millisecondsUpdated', () => {
 
 <br/>
 <br/>
+
+
+## Related articles
+[browser-timer](https://www.notion.so/browser-timer-71285a2262d84a618e31e2ed997d32ec) @duchang.dev
 
 ---
 ## License
